@@ -399,5 +399,12 @@ private:
 	uint16    defMod_;   // default modifier
 	uint16    defPref_;  // default preferences
 };
+
+class ExternalHeuristic : public ClaspVsids
+{
+public:
+    explicit ExternalHeuristic(const HeuParams& params = HeuParams());
+	Literal doSelect(Solver& s);
+};
 }
 #endif

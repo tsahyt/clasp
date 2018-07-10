@@ -912,4 +912,15 @@ void DomainHeuristic::undoLevel(Solver& s) {
 	}
 }
 template class ClaspVsids_t<DomScore>;
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// External heuristics
+/////////////////////////////////////////////////////////////////////////////////////////
+ExternalHeuristic::ExternalHeuristic(const HeuParams& params) {
+    ClaspVsids::setConfig(params);
+}
+
+Literal ExternalHeuristic::doSelect(Solver& s) {
+    return ClaspVsids::doSelect(s);
+}
 }
