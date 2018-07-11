@@ -558,6 +558,7 @@ public:
 	virtual void       resize(uint32 numSolver, uint32 numSearch);
 	//! Sets callback function for creating heuristics.
 	void               setHeuristicCreator(HeuristicCreator hc);
+    void               setExternalHeuristic();
 private:
 	typedef PodVector<SolverOpts>::type SolverVec;
 	typedef PodVector<SearchOpts>::type SearchVec;

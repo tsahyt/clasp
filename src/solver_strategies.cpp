@@ -26,6 +26,7 @@
 #include <clasp/heuristics.h>
 #include <clasp/lookahead.h>
 #include <cmath>
+#include <iostream>
 namespace Clasp {
 /////////////////////////////////////////////////////////////////////////////////////////
 // SolverStrategies / SolverParams
@@ -295,6 +296,9 @@ void BasicSatConfig::resize(uint32 solver, uint32 search) {
 }
 void BasicSatConfig::setHeuristicCreator(HeuristicCreator hc) {
 	heu_ = hc;
+}
+void BasicSatConfig::setExternalHeuristic() {
+    std::cout << "setExternalHeuristic called in config" << std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 // Heuristics
