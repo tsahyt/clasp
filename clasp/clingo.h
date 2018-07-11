@@ -212,6 +212,16 @@ private:
 	const Solver* solver_;
 };
 
+class ClingoExtHeuristic
+{
+public:
+    ClingoExtHeuristic ();
+    virtual ~ClingoExtHeuristic ();
+
+private:
+    /* data */
+};
+
 ///@}
 }
 #endif
