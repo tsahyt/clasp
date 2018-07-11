@@ -36,6 +36,7 @@
 #include <clasp/solver.h>
 #include <clasp/pod_vector.h>
 #include <clasp/util/indexed_priority_queue.h>
+#include <clasp/clingo.h>
 #include <list>
 namespace Clasp {
 
@@ -403,8 +404,10 @@ private:
 class ExternalHeuristic : public ClaspVsids
 {
 public:
-    explicit ExternalHeuristic(const HeuParams& params = HeuParams());
+    ExternalHeuristic(const HeuParams& params = HeuParams(), ClingoExtHeuristic* h = NULL);
 	Literal doSelect(Solver& s);
+private:
+    ClingoExtHeuristic* ext_;
 };
 }
 #endif

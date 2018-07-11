@@ -217,6 +217,7 @@ class ClingoExtHeuristic
 public:
     ClingoExtHeuristic ();
     virtual ~ClingoExtHeuristic ();
+    virtual int32_t decide();
 
 private:
     /* data */
