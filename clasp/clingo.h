@@ -212,17 +212,6 @@ private:
 	const Solver* solver_;
 };
 
-class ClingoExtHeuristic
-{
-public:
-    ClingoExtHeuristic () { };
-    ~ClingoExtHeuristic () { };
-    virtual int32_t decide() = 0;
-
-private:
-    /* data */
-};
-
 ///@}
 }
 #endif

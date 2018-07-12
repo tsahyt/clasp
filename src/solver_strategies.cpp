@@ -247,6 +247,7 @@ BasicSatConfig::BasicSatConfig() {
 	solver_.push_back(SolverParams());
 	search_.push_back(SolveParams());
 	heu_ = 0;
+    extheu_ = NULL;
 }
 void BasicSatConfig::prepare(SharedContext& ctx) {
 	uint32 warn = 0;
@@ -262,16 +263,22 @@ void BasicSatConfig::prepare(SharedContext& ctx) {
 }
 DecisionHeuristic* BasicSatConfig::heuristic(uint32 i)  const {
 	const SolverParams& p = BasicSatConfig::solver(i);
-	Heuristic_t::Type hId = static_cast<Heuristic_t::Type>(p.heuId);
-	if (hId == Heuristic_t::Default && p.search == SolverStrategies::use_learning) hId = Heuristic_t::Berkmin;
-	POTASSCO_REQUIRE(p.search == SolverStrategies::use_learning || !Heuristic_t::isLookback(hId), "Selected heuristic requires lookback!");
-	DecisionHeuristic* h = 0;
-	if (heu_) { h = heu_(hId, p.heuristic); }
-	if (!h)   { h = Heuristic_t::create(hId, p.heuristic); }
-	if (Lookahead::isType(p.lookType) && p.lookOps > 0 && hId != Heuristic_t::Unit) {
-		h = UnitHeuristic::restricted(h);
-	}
-	return h;
+    if(!extheu_) {
+        Heuristic_t::Type hId = static_cast<Heuristic_t::Type>(p.heuId);
+        if (hId == Heuristic_t::Default && p.search == SolverStrategies::use_learning) hId = Heuristic_t::Berkmin;
+        POTASSCO_REQUIRE(p.search == SolverStrategies::use_learning || !Heuristic_t::isLookback(hId), "Selected heuristic requires lookback!");
+        DecisionHeuristic* h = 0;
+        if (heu_) { h = heu_(hId, p.heuristic); }
+        if (!h)   { h = Heuristic_t::create(hId, p.heuristic); }
+        if (Lookahead::isType(p.lookType) && p.lookOps > 0 && hId != Heuristic_t::Unit) {
+            h = UnitHeuristic::restricted(h);
+        }
+        return h;
+    } else {
+        DecisionHeuristic* h = 0;
+        h = new ExternalHeuristic(HeuParams(), extheu_);
+        return h;
+    }
 }
 SolverParams& BasicSatConfig::addSolver(uint32 i) {
 	while (i >= solver_.size()) {
@@ -297,8 +304,9 @@ void BasicSatConfig::resize(uint32 solver, uint32 search) {
 void BasicSatConfig::setHeuristicCreator(HeuristicCreator hc) {
 	heu_ = hc;
 }
-void BasicSatConfig::setExternalHeuristic() {
+void BasicSatConfig::setExternalHeuristic(ClingoExtHeuristic *extheu) {
     std::cout << "setExternalHeuristic called in config" << std::endl;
+    extheu_ = extheu;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 // Heuristics

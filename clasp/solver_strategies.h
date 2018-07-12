@@ -539,6 +539,14 @@ struct ProjectMode_t {
 };
 typedef ProjectMode_t::Mode ProjectMode;
 
+class ClingoExtHeuristic
+{
+public:
+    ClingoExtHeuristic () { };
+    ~ClingoExtHeuristic () { };
+    virtual int32_t decide() = 0;
+};
+
 //! Basic configuration for one or more SAT solvers.
 class BasicSatConfig : public UserConfiguration, public ContextParams {
 public:
@@ -558,13 +566,14 @@ public:
 	virtual void       resize(uint32 numSolver, uint32 numSearch);
 	//! Sets callback function for creating heuristics.
 	void               setHeuristicCreator(HeuristicCreator hc);
-    void               setExternalHeuristic();
+    void               setExternalHeuristic(ClingoExtHeuristic* extheu);
 private:
 	typedef PodVector<SolverOpts>::type SolverVec;
 	typedef PodVector<SearchOpts>::type SearchVec;
 	SolverVec solver_;
 	SearchVec search_;
 	HeuristicCreator heu_;
+    ClingoExtHeuristic* extheu_;
 };
 
 //! Base class for solving related events.
