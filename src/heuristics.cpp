@@ -918,14 +918,14 @@ template class ClaspVsids_t<DomScore>;
 // External heuristics
 /////////////////////////////////////////////////////////////////////////////////////////
 ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h) {
-    std::cout << "ExternalHeuristic constructed" << std::endl;
+    std::cout << "ExternalHeuristic constructed " << h << std::endl;
     ClaspVsids::setConfig(params);
     ext_ = h;
 }
 
 Literal ExternalHeuristic::doSelect(Solver& s) {
-    std::cout << "ExternalHeuristic doSelect" << std::endl;
     int32_t l = ext_->decide();
+    std::cout << "ExternalHeuristic doSelect: " << l << std::endl;
     return ClaspVsids::doSelect(s);
 }
 }
