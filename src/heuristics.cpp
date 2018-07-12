@@ -30,6 +30,7 @@
 #include <string>
 #include <utility>
 #include <cmath>
+#include <iostream>
 namespace Clasp {
 /////////////////////////////////////////////////////////////////////////////////////////
 // Lookback selection strategies
@@ -917,11 +918,13 @@ template class ClaspVsids_t<DomScore>;
 // External heuristics
 /////////////////////////////////////////////////////////////////////////////////////////
 ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h) {
+    std::cout << "ExternalHeuristic constructed" << std::endl;
     ClaspVsids::setConfig(params);
     ext_ = h;
 }
 
 Literal ExternalHeuristic::doSelect(Solver& s) {
+    std::cout << "ExternalHeuristic doSelect" << std::endl;
     int32_t l = ext_->decide();
     return ClaspVsids::doSelect(s);
 }
