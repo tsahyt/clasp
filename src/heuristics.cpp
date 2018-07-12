@@ -924,8 +924,9 @@ ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic
 }
 
 Literal ExternalHeuristic::doSelect(Solver& s) {
-    int32_t l = ext_->decide();
+    Literal vsids = ClaspVsids::doSelect(s);
+    int32_t l = ext_->decide(vsids.id());
     std::cout << "ExternalHeuristic doSelect: " << l << std::endl;
-    return ClaspVsids::doSelect(s);
+    return Literal::fromId(l);
 }
 }

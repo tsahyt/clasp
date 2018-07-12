@@ -544,7 +544,7 @@ class ClingoExtHeuristic
 public:
     ClingoExtHeuristic () { };
     ~ClingoExtHeuristic () { };
-    virtual int32_t decide() = 0;
+    virtual int32_t decide(int32_t) = 0;
 };
 
 //! Basic configuration for one or more SAT solvers.
