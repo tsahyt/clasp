@@ -918,7 +918,6 @@ template class ClaspVsids_t<DomScore>;
 // External heuristics
 /////////////////////////////////////////////////////////////////////////////////////////
 ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h) {
-    std::cout << "ExternalHeuristic constructed " << h << std::endl;
     ClaspVsids::setConfig(params);
     ext_ = h;
 }
@@ -926,7 +925,6 @@ ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic
 Literal ExternalHeuristic::doSelect(Solver& s) {
     Literal vsids = ClaspVsids::doSelect(s);
     int32_t l = ext_->decide(toInt(vsids));
-    std::cout << "ExternalHeuristic doSelect: " << l << std::endl;
     Literal lit = toLit(l);
     if(!s.validVar(lit.var()) || s.value(lit.var()) != value_free) {
         throw std::logic_error("invalid literal in external heuristic");

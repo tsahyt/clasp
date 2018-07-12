@@ -305,7 +305,6 @@ void BasicSatConfig::setHeuristicCreator(HeuristicCreator hc) {
 	heu_ = hc;
 }
 void BasicSatConfig::setExternalHeuristic(ClingoExtHeuristic *extheu) {
-    std::cout << "setExternalHeuristic called in config" << std::endl;
     extheu_ = extheu;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
