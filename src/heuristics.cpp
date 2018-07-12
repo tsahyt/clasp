@@ -927,6 +927,10 @@ Literal ExternalHeuristic::doSelect(Solver& s) {
     Literal vsids = ClaspVsids::doSelect(s);
     int32_t l = ext_->decide(toInt(vsids));
     std::cout << "ExternalHeuristic doSelect: " << l << std::endl;
-    return toLit(l);
+    Literal lit = toLit(l);
+    if(!s.validVar(lit.var()) || s.value(lit.var()) != value_free) {
+        throw std::logic_error("invalid literal in external heuristic");
+    }
+    return lit;
 }
 }
