@@ -263,22 +263,16 @@ void BasicSatConfig::prepare(SharedContext& ctx) {
 }
 DecisionHeuristic* BasicSatConfig::heuristic(uint32 i)  const {
 	const SolverParams& p = BasicSatConfig::solver(i);
-    if(!extheu_) {
-        Heuristic_t::Type hId = static_cast<Heuristic_t::Type>(p.heuId);
-        if (hId == Heuristic_t::Default && p.search == SolverStrategies::use_learning) hId = Heuristic_t::Berkmin;
-        POTASSCO_REQUIRE(p.search == SolverStrategies::use_learning || !Heuristic_t::isLookback(hId), "Selected heuristic requires lookback!");
-        DecisionHeuristic* h = 0;
-        if (heu_) { h = heu_(hId, p.heuristic); }
-        if (!h)   { h = Heuristic_t::create(hId, p.heuristic); }
-        if (Lookahead::isType(p.lookType) && p.lookOps > 0 && hId != Heuristic_t::Unit) {
-            h = UnitHeuristic::restricted(h);
-        }
-        return h;
-    } else {
-        DecisionHeuristic* h = 0;
-        h = new ExternalHeuristic(HeuParams(), extheu_);
-        return h;
+    Heuristic_t::Type hId = static_cast<Heuristic_t::Type>(p.heuId);
+    if (hId == Heuristic_t::Default && p.search == SolverStrategies::use_learning) hId = Heuristic_t::Berkmin;
+    POTASSCO_REQUIRE(p.search == SolverStrategies::use_learning || !Heuristic_t::isLookback(hId), "Selected heuristic requires lookback!");
+    DecisionHeuristic* h = 0;
+    if (heu_) { h = heu_(hId, p.heuristic); }
+    if (!h)   { h = Heuristic_t::create(hId, p.heuristic, extheu_); }
+    if (Lookahead::isType(p.lookType) && p.lookOps > 0 && hId != Heuristic_t::Unit) {
+        h = UnitHeuristic::restricted(h);
     }
+    return h;
 }
 SolverParams& BasicSatConfig::addSolver(uint32 i) {
 	while (i >= solver_.size()) {
@@ -310,7 +304,8 @@ void BasicSatConfig::setExternalHeuristic(ClingoExtHeuristic *extheu) {
 /////////////////////////////////////////////////////////////////////////////////////////
 // Heuristics
 /////////////////////////////////////////////////////////////////////////////////////////
-DecisionHeuristic* Heuristic_t::create(Type id, const HeuParams& p) {
+DecisionHeuristic* Heuristic_t::create(Type id, const HeuParams& p, ClingoExtHeuristic *ext) {
+    if (ext != nullptr){ return new ExternalHeuristic(p, ext); }
 	if (id == Berkmin) { return new ClaspBerkmin(p); }
 	if (id == Vmtf)    { return new ClaspVmtf(p); }
 	if (id == Unit)    { return new UnitHeuristic(); }

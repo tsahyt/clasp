@@ -404,7 +404,7 @@ private:
 class ExternalHeuristic : public ClaspVsids
 {
 public:
-    ExternalHeuristic(const HeuParams& params = HeuParams(), ClingoExtHeuristic* h = NULL);
+    ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h);
 	Literal doSelect(Solver& s);
 private:
     ClingoExtHeuristic* ext_;

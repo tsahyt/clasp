@@ -917,9 +917,7 @@ template class ClaspVsids_t<DomScore>;
 /////////////////////////////////////////////////////////////////////////////////////////
 // External heuristics
 /////////////////////////////////////////////////////////////////////////////////////////
-ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h) {
-    ClaspVsids::setConfig(params);
-    ext_ = h;
+ExternalHeuristic::ExternalHeuristic(const HeuParams& params, ClingoExtHeuristic* h) : ClaspVsids(params), ext_(h) {
 }
 
 Literal ExternalHeuristic::doSelect(Solver& s) {

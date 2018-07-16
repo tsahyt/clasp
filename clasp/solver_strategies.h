@@ -525,20 +525,6 @@ public:
 	virtual SearchOpts&     addSearch(uint32 i) = 0;
 };
 
-//! Simple factory for decision heuristics.
-struct Heuristic_t {
-	enum Type { Default = 0, Berkmin = 1, Vsids = 2, Vmtf = 3, Domain = 4, Unit = 5, None = 6, User = 7  };
-	typedef DecisionHeuristic* (*Creator)(Type t, const HeuParams& p);
-	static inline bool        isLookback(uint32 type) { return type >= (uint32)Berkmin && type < (uint32)Unit; }
-	//! Default callback for creating decision heuristics.
-	static DecisionHeuristic* create(Type t, const HeuParams& p);
-};
-
-struct ProjectMode_t {
-	enum Mode { Implicit = 0u, Output = 1u, Explicit = 2u };
-};
-typedef ProjectMode_t::Mode ProjectMode;
-
 class ClingoExtHeuristic
 {
 public:
@@ -546,6 +532,20 @@ public:
     ~ClingoExtHeuristic () { };
     virtual int32_t decide(int32_t) = 0;
 };
+
+//! Simple factory for decision heuristics.
+struct Heuristic_t {
+	enum Type { Default = 0, Berkmin = 1, Vsids = 2, Vmtf = 3, Domain = 4, Unit = 5, None = 6, User = 7  };
+	typedef DecisionHeuristic* (*Creator)(Type t, const HeuParams& p);
+	static inline bool        isLookback(uint32 type) { return type >= (uint32)Berkmin && type < (uint32)Unit; }
+	//! Default callback for creating decision heuristics.
+	static DecisionHeuristic* create(Type t, const HeuParams& p, ClingoExtHeuristic *ext);
+};
+
+struct ProjectMode_t {
+	enum Mode { Implicit = 0u, Output = 1u, Explicit = 2u };
+};
+typedef ProjectMode_t::Mode ProjectMode;
 
 //! Basic configuration for one or more SAT solvers.
 class BasicSatConfig : public UserConfiguration, public ContextParams {
