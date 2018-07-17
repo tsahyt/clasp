@@ -1122,26 +1122,39 @@ void TextOutput::visitSolverStats(const Clasp::SolverStats& st) {
 	printBR(cat_comment);
 }
 
-void TextOutput::printChildren(const StatisticObject& s, unsigned level) {
+int TextOutput::printChildKey(unsigned level, const char* key, uint32 idx, const char* pre) const {
+	const unsigned indent = level * 2;
+	int len = 0;
+	printf("%s%-*.*s", format[cat_comment], indent, indent, " ");
+	if      (key) { len = printf("%s", key); }
+	else if (pre) { len = printf("[%s %u]", pre, idx); }
+	else          { len = printf("[%u]", idx); }
+	return (width_ - (int)indent) - len;
+}
+
+void TextOutput::printChildren(const StatisticObject& s, unsigned level, char const* prefix) {
+	const bool map = s.type() == Potassco::Statistics_t::Map;
 	for (uint32 i = 0; i != s.size(); ++i) {
-		const char* key = s.type() == Potassco::Statistics_t::Map ? s.key(i) : 0;
-		StatisticObject child = key ? s.at(key) : s[i];
+		const char* key       = map ? s.key(i)  : 0;
+		StatisticObject child = map ? s.at(key) : s[i];
 		if (child.type() == Potassco::Statistics_t::Value) {
-			unsigned indent = level > 1 ? (level - 1) * 2 : 0;
-			if (key) { printf("%s%-*.*s%-*s: %g\n", format[cat_comment], indent, indent, " ", std::max(30 - (int)indent, 0), key, child.value()); }
-			else     { printf("%s%-*.*s[%u]: %g\n", format[cat_comment], indent, indent, " ", i, child.value()); }
+			int align = printChildKey(level, key, i, prefix);
+			printf("%-*s: %g\n", std::max(0, align), "", child.value());
+		}
+		else if (child.type() == Potassco::Statistics_t::Array && key) {
+			printChildren(child, level, key);
 		}
 		else if (child.size()) {
-			unsigned indent = level * 2;
-			if (key) { printf("%s%-*.*s[%s]\n", format[cat_comment], indent, indent, " ", key); }
-			else     { printf("%s%-*.*s[%u]\n", format[cat_comment], indent, indent, " ", i); }
+			printChildKey(level, key, i, prefix);
+			printf("\n");
 			printChildren(child, level + 1);
 		}
 	}
 }
+
 void TextOutput::visitExternalStats(const StatisticObject& stats) {
 	POTASSCO_ASSERT(stats.type() == Potassco::Statistics_t::Map, "Non map statistic!");
-	printChildren(stats, 0);
+	printChildren(stats);
 }
 
 void TextOutput::printStats(const Clasp::SolverStats& st) const {
